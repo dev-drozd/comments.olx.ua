@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>OLX Comments</title>
+	<div id="fb-root"></div>
+	<script>
+	var url = null;
+	function initPage(){
+		url = atob(new URLSearchParams(window.location.search).get('url'));
+		document.getElementById('wrap-comment').setAttribute('data-href',url);
+	}
+	function createMutationObserver(){
+		var
+			target = document.querySelector('body'),
+
+			config = {
+				attributes            : true,
+				attributeOldValue     : false,
+				characterData         : true,
+				characterDataOldValue : false,
+				childList             : true,
+				subtree               : true
+			},
+
+			observer = new MutationObserver(function(mutations) {
+			console.log('change', document.body.offsetHeight);
+				window.parent.postMessage({
+					olxComment: true,
+					height: document.body.offsetHeight+20
+				},'*');
+			});
+		observer.observe(target, config);
+	}
+
+	var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+	if (MutationObserver){
+		createMutationObserver();
+	}
+	window.onload = () => {
+		console.log('complete');
+		document.getElementById('image-loader').remove();
+	};
+	</script>
+	<script async defer crossorigin="anonymous" src="https://connect.facebook.net/uk_UA/sdk.js#xfbml=1&version=v18.0&appId=476858952845878" nonce="nlM5wAKS" onload="initPage()"></script>
+  </head>
+  <body>
+	<img src="https://images.squarespace-cdn.com/content/v1/5c4a3053b98a78bea1e90622/1575486969836-DQKSYYW7F60712AGPFKV/loader.gif" id="image-loader" style="display: block;height: 240px;margin: auto;">
+	<div class="fb-comments" id="wrap-comment" data-href="" data-width="100%" data-numposts="5">
+	</div>
+  </body>
+</html>
